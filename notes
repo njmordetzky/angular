@@ -1,0 +1,209 @@
+MARCEL LinkedIn Learning JS and Angular for EIE
+———————————
+
+
+-COURSE BASICS-
+
+Course Title: Learning Angular JS 1
+https://marcel.ai/classes/course/course:288752#
+
+To run a build in the environment setup in this course use the gulp command
+Use git branch to view all the branches in the course
+Use git checkout branch_name to pull a specific branch
+
+
+-UNFAMILIAR PREREQUISITS-
+
+Course required knowledge of Bootstrap -which is a CSS tool based on flex box that applies styles based on class name
+
+
+-BINDING AND DIRECTIVES-
+
+AngularJS - allows development of apps with a simple setup for 2 way data binding
+* add the ng-app directive to the html you want to work with (as if it were an attribute)
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+in the example above the entire page is treated as an Angular application
+
+you can also add the directive to a specific section if you only need Angular to handle a portion of the page
+
+<div class="media-body" ng-app="myApp">
+  <h5 class="my-0 text-dark">{{item.name}}</h5>
+  <div class="text-secondary font-italic">{{item.reknown}}</div>
+</div>
+
+Load the Angular script in the head so you can start using it 
+<html ng-app="myApp">
+
+<head>
+  <script src="lib/angular/angular.min.js"></script>
+  <script src="js/app.js"></script>
+</head>
+
+Then you can use an ng-model directive within any form element. This creates a variable within the applications scope
+
+<div class="col-12">
+  <input class="form-control" id="searchQuery" placeholder="Search..." autofocus ng-model="query">
+</div>
+
+then you can output your ng-model as an expression within your html using double curly braces
+
+<div class="col">
+  <label class="col-form-label text-right" for="searchQuery">
+    search {{ query }}</label>
+</div><!-- label -->
+
+<div class="col-12">
+  <input class="form-control form-control-lg" id="searchQuery" placeholder="Search for artists" autofocus
+    ng-model="query">
+</div><!-- form -->
+
+
+-MODULES AND CONTROLLERS-
+
+Modules and controllers allow you to set up communication between scripts and templates. And the way that you do that is
+by using this thing called the scope variable, which acts like a global variable, and is the glue that lets our data be
+accessed inside our template.
+
+First, create a new Javascript file for your modules and controllers. For example, create app.js and place it within a
+js folder like so: js/app.js
+
+Then you can specify a module and controller:
+
+var myApp = angular.module('myApp', []);
+
+myApp.controller('myController', function myController($scope) {
+$scope.artist = {
+"name": "Barot Bellingham",
+"shortname": "Barot_Bellingham",
+"reknown": "Royal Academy of Painting and Sculpture",
+"bio": "Barot has just finished his final year at The Royal Academy of Painting and Sculpture, where he excelled in
+glass etching paintings and portraiture. Hailed as one of the most diverse artists of his generation, Barot is equally
+as skilled with watercolors as he is with oils, and is just as well-balanced in different subject areas. Barot's
+collection entitled \"The Un-Collection\" will adorn the walls of Gilbert Hall, depicting his range of skills and
+sensibilities - all of them, uniquely Barot, yet undeniably different"
+}
+});
+
+Now, to get this to work, you also need to go into your HTML file and use the ng-app & ng-controller directives to
+define the sections you want to use with your app and controller. In the instance below, the entire page will be
+utilized as an Angular app so the ng-app directive is defined in the html tag, and the ng-controller directive is
+defined in the body tag.
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS</title>
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" href="lib/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="lib/angular/angular.min.js"></script>
+  <script src="js/app.js"></script>
+</head>
+
+<body class="bg-secondary" ng-controller="myController">
+
+  Now, anything within your controller will have access to anything inside your scope variable. 
+
+  In our example, app.js has in it’s scope a variable called artist. To use this variable inside your HTML, you’d use an
+  expression like the following:
+
+  <body class="bg-secondary" ng-controller="myController">
+    <div class="media-body">
+      <h5>{{artist.name}}</h5>
+      <div>{{artist.bio}}</div>
+    </div><!-- media-body -->
+
+
+    -CONDITIONALS AND LOOPS-
+
+    There are other directives you can apply to elements for showing/hiding content, and looping through data.
+
+    The following ng-show directive displays a span's content if the "query" variable has content, otherwise it gets
+    hidden.
+
+    <div class="col">
+      <label class="col-form-label text-right" for="searchQuery">
+        <span ng-show="query">searching {{ 'for: ' + query }}</span></label>
+    </div>
+    <div class="col-12">
+      <input class="form-control" id="searchQuery" placeholder="Search for artists" autofocus ng-model="query">
+    </div>
+
+    With this slight variation, the ng-if directive removes the span from the DOM, instead of hiding it’s content like
+    it does above.
+
+    <div class="col">
+      <label class="col-form-label text-right" for="searchQuery">
+        <span ng-if="query">searching {{ 'for: ' + query }}</span></label>
+    </div>
+    <div class="col-12">
+      <input class="form-control" id="searchQuery" placeholder="Search for artists" autofocus ng-model="query">
+    </div>
+
+    With the ng-repeat directive you can loop through content. In the example below we're looping through all the
+    artists in an array and displaying their pictures, names, and some accompanying text in a sort-of drop down list.
+
+    <li class="list-group-item" ng-repeat="artist in artists">
+
+      <div class="media d-flex align-items-center">
+        <img class="rounded-circle mr-3" ng-src="images/{{artist.shortname}}_tn.jpg" alt="Photo of {{artist.name}}">
+        <div class="media-body">
+          <h5 class="my-0 text-dark">{{artist.name}}</h5>
+          <div class="text-secondary font-italic">{{artist.reknown}}</div>
+        </div><!-- media-body -->
+      </div><!-- media -->
+
+    </li>
+
+
+    -ANGULAR SERVICES-
+
+    One of the most important services that come with AngularJS is the $http service which allows you to handle Ajax
+    requests to load files like json documents.
+
+    In this example, we add a call to Angular’s $http service as a dependency of the controller.
+    We then use the http.get method to get our data file, ‘data.json’, from within our js folder
+    Then we use the .then method with a callback function to get the data from our data file
+    And finally we set our scope.artists variable equal to the data we just got.
+
+    myApp.controller('MyController', function MyController($scope, $http) {
+    $http.get('js/data.json').then(function (response) {
+    $scope.artists = response.data;
+    });
+    });
+
+
+    -ANGULAR FILTERS-
+
+    Basic filters: currency, number, date, lowercase, uppercase
+
+    <h5>{{item.name | uppercase}}</h5>
+
+    Array filters: limitTo, filter, orderBy
+
+    <li class="list-group-item" ng-repeat="item in artists | limitTo: 4:2">
+
+      <div class="media d-flex align-items-center">
+        <img class="rounded-circle mr-3" ng-src="images/{{item.shortname}}_tn.jpg" alt="Photo of {{item.name}}">
+        <div class="media-body">
+          <h5 class="my-0 text-dark">{{item.name}}</h5>
+          <div class="text-secondary font-italic">{{item.reknown}}</div>
+        </div><!-- media-body -->
+      </div><!-- media -->
+
+    </li>
+
+    * https://docs.angularjs.org/api/ng/filter/limitTo
+
+    ng-repeat="item in artists | filter: query">
+    ng-repeat="item in artists | orderBy: 'name':'reverse'">
+
+
+    -BINDING INPUTS AND CONTROLLERS-
